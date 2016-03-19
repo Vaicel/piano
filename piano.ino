@@ -44,39 +44,34 @@ void setup()
 }
 void loop()
 {
-	if(analogRead(A1)/45==aC4){
-		note(2, NOTE_C4);
-	}
-	else if(analogRead(A1)/45==aD4){
-		note(3, NOTE_D4);
-	}
-	else if(analogRead(A1)/45==aE4){
-		note(4, NOTE_E4);
-
-	}
-	else if(analogRead(A1)/45==aF4){
-		note(5, NOTE_F4);
-
-	}
-	else if(analogRead(A1)/45==aG4){
-		note(6, NOTE_G4);
-
-	}
-	else if(analogRead(A1)/45==aA4){
-		note(7, NOTE_A4);
-
-	}
-	else if(analogRead(A1)/45==aB4){
-		note(8, NOTE_B4);
-
-	}
-	else if(analogRead(A1)/45==aC5){
-		note(9, NOTE_C5);
-
-	}
-	else{
-		digitalWrite(digit, LOW); //выключение светодиода, при отпускании кнопки
-		digit=0;
+	switch (analogRead(A1)/45) {
+	    case aC4:
+	      note(2, NOTE_C4);
+	      break;
+	    case aD4:
+	      note(3, NOTE_D4);
+	      break;
+	    case aE4:
+	      note(4, NOTE_E4);
+	      break;
+	    case aF4:
+	      note(5, NOTE_F4);
+	      break;
+	    case aG4:
+	      note(6, NOTE_G4);
+	      break;
+	    case aA4:
+	      note(7, NOTE_A4);
+	      break;
+	    case aB4:
+	      note(8, NOTE_B4);
+          break;
+        case aC5:
+          note(9, NOTE_C5);
+          break;
+	    default:
+	      digitalWrite(digit, LOW); //выключение светодиода, при отпускании кнопки
+		  digit=0;
 	}
 	delay(del);
 }
