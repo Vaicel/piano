@@ -65,13 +65,13 @@ void loop()
 	      break;
 	    case aB4:
 	      note(8, NOTE_B4);
-          break;
-        case aC5:
-          note(9, NOTE_C5);
-          break;
+              break;
+            case aC5:
+              note(9, NOTE_C5);
+              break;
 	    default:
 	      digitalWrite(digit, LOW); //выключение светодиода, при отпускании кнопки
-		  digit=0;
+	      digit=0;
 	}
 	delay(del);
 }
