@@ -71,7 +71,7 @@ void loop()
 
 	}
 	else if(analogRead(A1)/45==aC5){
-		note(3, NOTE_C%);
+		note(9, NOTE_C5);
 
 	}
 	else{
