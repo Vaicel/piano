@@ -18,23 +18,33 @@ Code made by Vaicel. 2016.
 #define aA4 4
 #define aB4 3
 #define aC5 1
-#define tonePin 10
-#define del 100
-int digit;             //Включенный светодиод
-void note(int digitality, int tonote){
+#define kdel 100  //delay
+int digit,lastDigit,nowNote;
+int notes[8]={NOTE_C5,NOTE_B4,NOTE_A4,NOTE_G4,NOTE_F4,NOTE_E4,NOTE_D4,NOTE_C4};          //Включенный светодиод
+void note(int tonePin, int tonote, int del){
 	/***********************************
 	/Сначала проверяется, включен ли этот светодиод,
 	Если да, то продолжаем тянуть ноту
 	Если нет, то выключаем прошлый светодиод, включаем наш
 	И тянем ноту/
 	***********************************/
-	if(digit!=digitality){
-	    digitalWrite(digit, LOW);
-	    digit=digitality;
+
+	if(digit!=lastDigit){
+	    digitalWrite(lastDigit, LOW);
+	    lastDigit=digit;
 	    tone(tonePin, tonote, del);
 	    digitalWrite(digit, HIGH);
 	}
     tone(tonePin, tonote, del);
+}
+void start(){
+	if(analogRead(A1)/45!=1){
+		nowNote=(analogRead(A1)/45)-2;
+	}
+	else{
+		nowNote=(analogRead(A1)/45)-1;
+	}
+	digit=nowNote+2;
 }
 void setup()
 {
@@ -43,35 +53,8 @@ void setup()
 	}
 }
 void loop()
-{
-	switch (analogRead(A1)/45) {
-	    case aC4:
-	      note(2, NOTE_C4);
-	      break;
-	    case aD4:
-	      note(3, NOTE_D4);
-	      break;
-	    case aE4:
-	      note(4, NOTE_E4);
-	      break;
-	    case aF4:
-	      note(5, NOTE_F4);
-	      break;
-	    case aG4:
-	      note(6, NOTE_G4);
-	      break;
-	    case aA4:
-	      note(7, NOTE_A4);
-	      break;
-	    case aB4:
-	      note(8, NOTE_B4);
-          break;
-        case aC5:
-          note(9, NOTE_C5);
-          break;
-	    default:
-	      digitalWrite(digit, LOW); //выключение светодиода, при отпускании кнопки
-		  digit=0;
-	}
-	delay(del);
+{	
+	start();
+	note(10,notes[nowNote],kdel);
+	delay(kdel);
 }
