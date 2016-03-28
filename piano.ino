@@ -1,9 +1,8 @@
 /******************
-Code made by Vaicel. 2016.
-//dubkov branch
+@ KIDS FOOT PIANO @
+@    By dubkov    @
+@    29.03.2016   @
 ******************/
-
-// Частоты 
 
 #define FR_NOTE_C4  262 
 #define FR_NOTE_D4  294
@@ -67,20 +66,21 @@ int melodies[][8] = {
 int currentNote = 0;
 int prevNote = 18;
 int currentMelody = 0;
-int prevMelody =0;
+int prevMelody = 18;
 int currentNoteToPlay = 0;
 
 volatile int mode = 0;
 
 void setup(){
-	for (int i=0; i<9; i++)
+	for (int i=0; i<9; i++){
 		pinMode(ledsNotes[i],OUTPUT);
+	}
 	pinMode(BTN_MODE, INPUT_PULLUP);
 	pinMode(LED_MODE_0, OUTPUT);
 	pinMode(LED_MODE_1, OUTPUT);
 	pinMode(LED_MODE_2, OUTPUT);
 	attachInterrupt(0, switchMode, FALLING);
-	Serial.begin(19200);
+//	Serial.begin(19200);
 }
 
 void loop(){
@@ -92,7 +92,7 @@ void loop(){
 			prevNote = inputConverter(analogRead(BTN_NOTES)/54);
 			delay(5);
   			currentNote = inputConverter(analogRead(BTN_NOTES)/54);
-  			Serial.println(currentNote);
+//  			Serial.println(currentNote);
   			if(prevNote == currentNote && currentNote < 15){
 				playInModeZero(currentNote);
 				
@@ -114,14 +114,23 @@ void loop(){
 	}
 
 	else if (mode == 2){
+		ledsOff();
 		digitalWrite(LED_MODE_1, LOW);
 		digitalWrite(LED_MODE_2, HIGH);
+		currentMelody = 0;
 		while(mode == 2){
 			for (int ntpIter = 0; ntpIter < 8; ntpIter++){
 				currentNoteToPlay = melodies[currentMelody][ntpIter];
 				digitalWrite(ledsNotes[currentNoteToPlay],HIGH);
-				currentNote = analogRead(BTN_NOTES)/54;
-  				playInModeTwo(currentNote, currentNoteToPlay);	
+				while(currentNote != currentNoteToPlay){
+					prevNote = inputConverter(analogRead(BTN_NOTES)/54);
+					delay(5);
+	  				currentNote = inputConverter(analogRead(BTN_NOTES)/54);
+	  			}
+	  			tone(BUZZER_PIN, freqsNotes[currentNote], 800);
+	  			delay(800);
+				digitalWrite(ledsNotes[currentNoteToPlay],LOW);
+  				//playInModeTwo(currentNote, currentNoteToPlay);	
 			}	
 		}		
 	}
