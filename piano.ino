@@ -67,36 +67,35 @@ volatile int mode = 0;
 
 void setup(){
 	for (int i=0; i<9; i++)
-		pinMode(ledNotes[i],OUTPUT);
+		pinMode(ledsNotes[i],OUTPUT);
 	pinMode(BTN_MODE, INTPUT_PULLUP);
 	pinMode(13, OUTPUT);
 	attachInterrupt(digitalPinToInterrupt(BTN_MODE), switchMode, FALLING);
 }
 
 void loop(){
-	goto modeZero;
+	if (mode == 0){
+		digitalWrite(LED_MODE_2, LOW);
+		digitalWrite(LED_MODE_0, HIGH);
+		while(mode == 0){
+			blink(1000);
+		}		
+	}
+	else if (mode == 1){
+		digitalWrite(LED_MODE_0, LOW);
+		digitalWrite(LED_MODE_1, HIGH);
+		while(mode == 1){
+			blink(500);
+		}
+	}
+	else if (mode == 2){
+		digitalWrite(LED_MODE_1, LOW);
+		digitalWrite(LED_MODE_2, HIGH);
+		while(mode == 2){
+			blink(200);
+		}		
+	}
 }
-
-modeZero:
-	digitalWrite(LED_MODE_2, LOW);
-	digitalWrite(LED_MODE_0, HIGH);
-	while(1){
-		blink(1000);
-	}
-	
-modeOne:
-	digitalWrite(LED_MODE_0, LOW);
-	digitalWrite(LED_MODE_1, HIGH);
-	while(1){
-		blink(500);
-	}
-
-modeTwo:
-	digitalWrite(LED_MODE_1, LOW);
-	digitalWrite(LED_MODE_2, HIGH);
-	while(1){
-		blink(200);
-	}
 
 
 void blink(int btime){
@@ -107,12 +106,12 @@ void blink(int btime){
 }
 
 void switchMode(){
-	if (mode == 0){ mode = 1; goto modeOne; }
-	if (mode == 1){ mode = 2; goto modeTwo; }
-	if (mode == 2){ mode = 0; goto modeZero; }
+	if (mode == 0){ mode = 1; }
+	if (mode == 1){ mode = 2; }
+	if (mode == 2){ mode = 0; }
 }
 
 void ledsOff(){
 	for (int i=0; i<9; i++)
-		digitalWrite(ledNotes[i],LOW);
+		digitalWrite(ledsNotes[i],LOW);
 }
