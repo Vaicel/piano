@@ -85,7 +85,7 @@ void loop(){
 		digitalWrite(LED_MODE_2, LOW);
 		digitalWrite(LED_MODE_0, HIGH);
 		while(mode == 0){
-  			currentNote = analogRead(BTN_NOTES)/54;
+  			currentNote = inputToNote(analogRead(BTN_NOTES)/54);
   			if(currentNote < 15)
 				playInModeZero(currentNote);
 		}		
@@ -95,7 +95,7 @@ void loop(){
 		digitalWrite(LED_MODE_1, HIGH);
 		while(mode == 1){
  			ledsOn(); 
-			currentMelody = analogRead(BTN_NOTES)/54;
+			currentMelody = inputToNote(analogRead(BTN_NOTES)/54);
   			if(currentNote < 15)
 				playInModeOne(currentMelody);
 		}
@@ -157,4 +157,18 @@ void playInModeTwo(int currentNoteInModeTwo, int currentNoteToPlayInModeTwo){
 	tone(BUZZER_PIN, freqsNotes[currentNoteInModeTwo], 1000);
 	digitalWrite(ledsNotes[currentNoteToPlayInModeTwo],LOW);
 
+}
+
+int inputToNote(int ainput){
+  switch (ainput){
+    case 0: return 0;
+    case 1: return 1;
+    case 2: return 2;
+    case 3: return 3;
+    case 5: return 4;
+    case 7: return 5;
+    case 9: return 6;
+    case 11: return 7;
+    case 18: return 100;
+  }
 }
