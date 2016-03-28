@@ -106,9 +106,9 @@ void blink(int btime){
 }
 
 void switchMode(){
-	if (mode == 0){ mode = 1; }
-	if (mode == 1){ mode = 2; }
-	if (mode == 2){ mode = 0; }
+	if (mode == 0){ mode = 1; return; }
+	if (mode == 1){ mode = 2; return; }
+	if (mode == 2){ mode = 0; return; }
 }
 
 void ledsOff(){
