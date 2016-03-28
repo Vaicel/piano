@@ -67,6 +67,7 @@ int melodies[][8] = {
 
 int currentNote = 0;
 int currentMelody = 0;
+int currentNoteToPlay = 0;
 
 volatile int mode = 0;
 
@@ -75,6 +76,9 @@ void setup(){
 		pinMode(ledsNotes[i],OUTPUT);
 	pinMode(BTN_MODE, INPUT_PULLUP);
 	pinMode(13, OUTPUT);
+	pinMode(LED_MODE_0, OUTPUT);
+	pinMode(LED_MODE_1, OUTPUT);
+	pinMode(LED_MODE_2, OUTPUT);
 	attachInterrupt(0, switchMode, FALLING);
 }
 
@@ -84,7 +88,8 @@ void loop(){
 		digitalWrite(LED_MODE_0, HIGH);
 		while(mode == 0){
   			currentNote = analogRead(BTN_NOTES);
-			playInModeZero(currentNote);
+  			if(currentNote < ???)
+				playInModeZero(currentNote);
 		}		
 	}
 	else if (mode == 1){
@@ -93,14 +98,19 @@ void loop(){
 		while(mode == 1){
  			ledsOn(); 
 			currentMelody = analogRead(BTN_NOTES);
-			playInModeOne(currentMelody);
+  			if(currentNote < ???)
+				playInModeOne(currentMelody);
 		}
 	}
 	else if (mode == 2){
 		digitalWrite(LED_MODE_1, LOW);
 		digitalWrite(LED_MODE_2, HIGH);
 		while(mode == 2){
-			
+			for (int ntpIter = 0; ntpIter < 8; ntpIter++){
+				currentNoteToPlay = melodies[currentMelody][ntpIter];
+				digitalWrite(ledsNotes[currentNoteToPlay],HIGH)
+				currentNote = analogRead(BTN_NOTES);
+  				playInModeTwo(currentNote, currentNoteToPlay);	
 		}		
 	}
 }
@@ -135,10 +145,17 @@ void playInModeZero(int currentNoteInModeZero){
 	digitalWrite(ledsNotes[currentNoteInModeZero],LOW);
 }
 
-void playInModeOne(int currentMelodyInModeZero){
+void playInModeOne(int currentMelodyInModeTwo){
 	ledsOff();
 	for (int noteInModeOne = 0; noteInModeOne < 8; noteInModeOne++){
-		playInModeZero(melodies[currentMelodyInModeZero][noteInModeOne]);
+		playInModeZero(melodies[currentMelodyInModeTwo][noteInModeOne]);
 	}
-	 
+	ledsOn();
+}
+
+void playInModeTwo(int currentNoteInModeTwo, int currentNoteToPlayInModeTwo){
+	while(currentNoteInModeTwo != currentNoteToPlayInModeTwo);
+	tone(BUZZER_PIN, freqsNotes[currentNoteInModeTwo], 1000);
+	digitalWrite(ledsNotes[currentNoteToPlayInModeTwo],LOW);
+
 }
