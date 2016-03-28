@@ -33,19 +33,17 @@ Code made by Vaicel. 2016.
 #define LED_MODE_1	15
 #define LED_MODE_2	16
 
-/*
-#define aC4 9		   //Дефайны значений кнопок, получаемые через аналоговый вход
-#define aD4 8
+
+#define aC4 0		   //Дефайны значений кнопок, получаемые через аналоговый вход
+#define aD4 3
 #define aE4 7
-#define aF4 6
-#define aG4 5
-#define aA4 4
-#define aB4 3
-#define aC5 1
-#define kdel 100  //delay
-*/
+#define aF4 11
+#define aG4 16
+#define aA4 23
+#define aB4 28
+#define aC5 33
 
-
+int aButtons[] = {aC4,aD4,aE4,aF4,aG4,aA4,aB4,aC5};
 
 int ledsNotes[] = {LED_NOTE_C4,LED_NOTE_D4,LED_NOTE_E4,LED_NOTE_F4,
 					LED_NOTE_G4,LED_NOTE_A4,LED_NOTE_B4,LED_NOTE_C5};
@@ -87,8 +85,8 @@ void loop(){
 		digitalWrite(LED_MODE_2, LOW);
 		digitalWrite(LED_MODE_0, HIGH);
 		while(mode == 0){
-  			currentNote = analogRead(BTN_NOTES);
-  			if(currentNote < ???)
+  			currentNote = analogRead(BTN_NOTES)/54;
+  			if(currentNote < 15)
 				playInModeZero(currentNote);
 		}		
 	}
@@ -97,8 +95,8 @@ void loop(){
 		digitalWrite(LED_MODE_1, HIGH);
 		while(mode == 1){
  			ledsOn(); 
-			currentMelody = analogRead(BTN_NOTES);
-  			if(currentNote < ???)
+			currentMelody = analogRead(BTN_NOTES)/54;
+  			if(currentNote < 15)
 				playInModeOne(currentMelody);
 		}
 	}
@@ -108,9 +106,10 @@ void loop(){
 		while(mode == 2){
 			for (int ntpIter = 0; ntpIter < 8; ntpIter++){
 				currentNoteToPlay = melodies[currentMelody][ntpIter];
-				digitalWrite(ledsNotes[currentNoteToPlay],HIGH)
-				currentNote = analogRead(BTN_NOTES);
+				digitalWrite(ledsNotes[currentNoteToPlay],HIGH);
+				currentNote = analogRead(BTN_NOTES)/54;
   				playInModeTwo(currentNote, currentNoteToPlay);	
+			}	
 		}		
 	}
 }
