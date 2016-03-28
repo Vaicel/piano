@@ -70,7 +70,7 @@ void setup(){
 		pinMode(ledNotes[i],OUTPUT);
 	pinMode(BTN_MODE, INTPUT_PULLUP);
 	pinMode(13, OUTPUT);
-	attachInterrupt(digitalPinToInterrupt(2), switchMode, FALLING);
+	attachInterrupt(digitalPinToInterrupt(BTN_MODE), switchMode, FALLING);
 }
 
 void loop(){
@@ -78,14 +78,22 @@ void loop(){
 }
 
 modeZero:
+	digitalWrite(LED_MODE_2, LOW);
+	digitalWrite(LED_MODE_0, HIGH);
 	while(1){
 		blink(1000);
 	}
+	
 modeOne:
+	digitalWrite(LED_MODE_0, LOW);
+	digitalWrite(LED_MODE_1, HIGH);
 	while(1){
 		blink(500);
-	}	
+	}
+
 modeTwo:
+	digitalWrite(LED_MODE_1, LOW);
+	digitalWrite(LED_MODE_2, HIGH);
 	while(1){
 		blink(200);
 	}
@@ -104,3 +112,7 @@ void switchMode(){
 	if (mode == 2){ mode = 0; goto modeZero; }
 }
 
+void ledsOff(){
+	for (int i=0; i<9; i++)
+		digitalWrite(ledNotes[i],LOW);
+}
