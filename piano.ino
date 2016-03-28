@@ -80,6 +80,7 @@ void setup(){
 	pinMode(LED_MODE_1, OUTPUT);
 	pinMode(LED_MODE_2, OUTPUT);
 	attachInterrupt(0, switchMode, FALLING);
+	attachInterrupt(1, switchMelody, FALLING);
 //	Serial.begin(19200);
 }
 
@@ -117,7 +118,7 @@ void loop(){
 		ledsOff();
 		digitalWrite(LED_MODE_1, LOW);
 		digitalWrite(LED_MODE_2, HIGH);
-		currentMelody = 0;
+//		currentMelody = 0;
 		while(mode == 2){
 			for (int ntpIter = 0; ntpIter < 8; ntpIter++){
 				currentNoteToPlay = melodies[currentMelody][ntpIter];
@@ -153,12 +154,8 @@ void playInModeOne(int currentMelodyInModeOne){
 	}
 }
 
-void playInModeTwo(int currentNoteInModeTwo, int currentNoteToPlayInModeTwo){
-	while(currentNoteInModeTwo != currentNoteToPlayInModeTwo);
-	tone(BUZZER_PIN, freqsNotes[currentNoteInModeTwo], 1000);
-	digitalWrite(ledsNotes[currentNoteToPlayInModeTwo],LOW);
-
-}
+//void playInModeTwo(int currentNoteInModeTwo, int currentNoteToPlayInModeTwo){
+//}
 
 int inputConverterArray[] = {0,1,2,3,4,4,5,5,6,6,7,7,
 						18,18,18,18,18,18,18};
@@ -171,6 +168,18 @@ void switchMode(){
 	if (mode == 0){ mode = 1; return; }
 	if (mode == 1){ mode = 2; return; }
 	if (mode == 2){ mode = 0; return; }
+}
+
+void switchMelody(){
+	if (currentMelody == 0){ currentMelody = 1; return;}
+	if (currentMelody == 1){ currentMelody = 2; return;}
+	if (currentMelody == 2){ currentMelody = 3; return;}
+	if (currentMelody == 3){ currentMelody = 4; return;}
+	if (currentMelody == 4){ currentMelody = 5; return;}
+	if (currentMelody == 5){ currentMelody = 6; return;}
+	if (currentMelody == 6){ currentMelody = 7; return;}
+	if (currentMelody == 7){ currentMelody = 0; return;}
+
 }
 
 void ledsOff(){
