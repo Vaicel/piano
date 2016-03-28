@@ -50,7 +50,11 @@ Code made by Vaicel. 2016.
 int ledsNotes[] = {LED_NOTE_C4,LED_NOTE_D4,LED_NOTE_E4,LED_NOTE_F4,
 					LED_NOTE_G4,LED_NOTE_A4,LED_NOTE_B4,LED_NOTE_C5};
 
-int melodies = {
+int freqsNotes[] = {FR_NOTE_C4,FR_NOTE_D4,FR_NOTE_E4,FR_NOTE_F4,
+					FR_NOTE_G4,FR_NOTE_A4,FR_NOTE_B4,FR_NOTE_C5};
+
+
+int melodies[][8] = {
 	{1,2,3,4,5,6,7,0},
 	{2,3,4,5,6,7,0,1},
 	{3,4,5,6,7,0,1,2},
@@ -59,18 +63,19 @@ int melodies = {
 	{6,7,0,1,2,3,4,5},
 	{7,0,1,2,3,4,5,6},
 	{0,1,2,3,4,5,6,7}
-}
+};
 
-int currentMelody[] = {1,1,1,1,1,1,1,1};
+int currentNote = 0;
+int currentMelody = 0;
 
 volatile int mode = 0;
 
 void setup(){
 	for (int i=0; i<9; i++)
 		pinMode(ledsNotes[i],OUTPUT);
-	pinMode(BTN_MODE, INTPUT_PULLUP);
+	pinMode(BTN_MODE, INPUT_PULLUP);
 	pinMode(13, OUTPUT);
-	attachInterrupt(digitalPinToInterrupt(BTN_MODE), switchMode, FALLING);
+	attachInterrupt(0, switchMode, FALLING);
 }
 
 void loop(){
@@ -78,21 +83,24 @@ void loop(){
 		digitalWrite(LED_MODE_2, LOW);
 		digitalWrite(LED_MODE_0, HIGH);
 		while(mode == 0){
-			blink(1000);
+  			currentNote = analogRead(BTN_NOTES);
+			playInModeZero(currentNote);
 		}		
 	}
 	else if (mode == 1){
 		digitalWrite(LED_MODE_0, LOW);
 		digitalWrite(LED_MODE_1, HIGH);
 		while(mode == 1){
-			blink(500);
+ 			ledsOn(); 
+			currentMelody = analogRead(BTN_NOTES);
+			playInModeOne(currentMelody);
 		}
 	}
 	else if (mode == 2){
 		digitalWrite(LED_MODE_1, LOW);
 		digitalWrite(LED_MODE_2, HIGH);
 		while(mode == 2){
-			blink(200);
+			
 		}		
 	}
 }
@@ -114,4 +122,23 @@ void switchMode(){
 void ledsOff(){
 	for (int i=0; i<9; i++)
 		digitalWrite(ledsNotes[i],LOW);
+}
+
+void ledsOn(){
+	for (int i=0; i<9; i++)
+		digitalWrite(ledsNotes[i],HIGH);
+}
+
+void playInModeZero(int currentNoteInModeZero){
+	digitalWrite(ledsNotes[currentNoteInModeZero],HIGH);
+	tone(BUZZER_PIN, freqsNotes[currentNoteInModeZero], 1000);
+	digitalWrite(ledsNotes[currentNoteInModeZero],LOW);
+}
+
+void playInModeOne(int currentMelodyInModeZero){
+	ledsOff();
+	for (int noteInModeOne = 0; noteInModeOne < 8; noteInModeOne++){
+		playInModeZero(melodies[currentMelodyInModeZero][noteInModeOne]);
+	}
+	 
 }
