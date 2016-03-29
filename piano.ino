@@ -8,7 +8,6 @@
 /*
 в режиме 3: если сыграна часть мелодии и затем мелодия переключилась, 
 			то текущая позиция внутри мелодии не сбрасывается
-в режиме 3: режим переключается только после доигрывания мелодии
 */
 
 #define FR_NOTE_C4  262 
@@ -40,24 +39,13 @@
 #define LED_MODE_1	15
 #define LED_MODE_2	16
 
-
-#define aC4 0		   //Дефайны значений кнопок, получаемые через аналоговый вход
-#define aD4 3
-#define aE4 7
-#define aF4 11
-#define aG4 16
-#define aA4 23
-#define aB4 28
-#define aC5 33
-
-int aButtons[] = {aC4,aD4,aE4,aF4,aG4,aA4,aB4,aC5};
-
 int ledsNotes[] = {LED_NOTE_C4,LED_NOTE_D4,LED_NOTE_E4,LED_NOTE_F4,
 					LED_NOTE_G4,LED_NOTE_A4,LED_NOTE_B4,LED_NOTE_C5};
 
 int freqsNotes[] = {FR_NOTE_C4,FR_NOTE_D4,FR_NOTE_E4,FR_NOTE_F4,
 					FR_NOTE_G4,FR_NOTE_A4,FR_NOTE_B4,FR_NOTE_C5};
 
+// ноты мелодий 
 
 int melodies[][11] = {
 	{0,5,5,4,5,3,0,0,0,0,0},	// В лесу родилась елочка
@@ -70,7 +58,7 @@ int melodies[][11] = {
 	{2,4,4,2,3,4,4,0,0,0,0}		// Встаньте дети встаньте в круг
 };
 
-int melodysLens[] = {8,9,7,11,8,11,11,7};
+int melodysLens[] = {8,9,7,11,8,11,11,7}; 	// длины мелодий
 
 int currentNote = 0;
 int prevNote = 18;
@@ -78,7 +66,6 @@ int currentMelody = 0;
 volatile int currentMelodyInModeTwo = 0;
 int prevMelody = 18;
 int currentNoteToPlay = 0;
-
 volatile int mode = 0;
 
 void setup(){
@@ -104,11 +91,8 @@ void loop(){
 			prevNote = inputConverter(analogRead(BTN_NOTES)/54);
 			delay(5);
   			currentNote = inputConverter(analogRead(BTN_NOTES)/54);
-//  			Serial.println(currentNote);
-  			if(prevNote == currentNote && currentNote < 15){
+  			if(prevNote == currentNote && currentNote < 15)
 				playInModeZero(currentNote);
-				
-			}
 		}		
 	}
 
@@ -129,7 +113,6 @@ void loop(){
 		ledsOff();
 		digitalWrite(LED_MODE_1, LOW);
 		digitalWrite(LED_MODE_2, HIGH);
-	//	currentMelody = 0;
 		while(mode == 2){
 			for (int ntpIter = 0; ntpIter < melodysLens[currentMelodyInModeTwo]; ntpIter++){
 				currentNoteToPlay = melodies[currentMelodyInModeTwo][ntpIter];
@@ -156,8 +139,6 @@ void playInModeZero(int currentNoteInModeZero){
   ledsOff();
 	digitalWrite(ledsNotes[currentNoteInModeZero],HIGH);
 	tone(BUZZER_PIN, freqsNotes[currentNoteInModeZero], 100);
-//	delay(50);
-//	digitalWrite(ledsNotes[currentNoteInModeZero],LOW);
 }
 
 void playInModeOne(int currentMelodyInModeOne){
