@@ -6,8 +6,10 @@
 
 //Известные баги
 /*
-в режиме 2: подсвечиваются не играемые ноты, а просто кнопки по порядку
-в режиме 3: если подряд одинаковые ноты, они проигрываются сами
+[РЕШЕНО, ТЕСТИТЬ] в режиме 2: подсвечиваются не играемые ноты, а просто кнопки по порядку
+[РЕШЕНО, ТЕСТИТЬ] в режиме 3: если подряд одинаковые ноты, они проигрываются сами
+в режиме 3: если сыграна часть мелодии и затем мелодия переключилась, 
+			то текущая позиция внутри мелодии не сбрасывается
 */
 
 #define FR_NOTE_C4  262 
@@ -132,14 +134,17 @@ void loop(){
 				currentNoteToPlay = melodies[currentMelodyInModeTwo][ntpIter];
 				digitalWrite(ledsNotes[currentNoteToPlay],HIGH);
 				while(currentNote != currentNoteToPlay){
-					prevNote = inputConverter(analogRead(BTN_NOTES)/54);
-					delay(5);
-	  				currentNote = inputConverter(analogRead(BTN_NOTES)/54);
+					while(prevNote != currentNote){
+						prevNote = inputConverter(analogRead(BTN_NOTES)/54);
+						delay(5);
+		  				currentNote = inputConverter(analogRead(BTN_NOTES)/54);
+	  				}
+
 	  			}
-Serial.println(currentMelodyInModeTwo);
 	  			tone(BUZZER_PIN, freqsNotes[currentNote], 800);
 	  			delay(800);
 				digitalWrite(ledsNotes[currentNoteToPlay],LOW);
+				currentNote = 18;
   				//playInModeTwo(currentNote, currentNoteToPlay);	
 			}	
 		}		
@@ -158,10 +163,10 @@ void playInModeZero(int currentNoteInModeZero){
 void playInModeOne(int currentMelodyInModeOne){
 	ledsOff();
 	for (int noteInModeOne = 0; noteInModeOne < 8; noteInModeOne++){
-		digitalWrite(ledsNotes[noteInModeOne],HIGH);
+		digitalWrite(melodies[currentMelodyInModeOne][noteInModeOne],HIGH);
 		tone(BUZZER_PIN, freqsNotes[melodies[currentMelodyInModeOne][noteInModeOne]], 800);
 		delay(800);
-		digitalWrite(ledsNotes[noteInModeOne],LOW);
+		digitalWrite(melodies[currentMelodyInModeOne][noteInModeOne],LOW);
 	}
 }
 
@@ -182,7 +187,6 @@ void switchMode(){
 }
 
 void switchMelody(){
-  Serial.println("p");
 	if (currentMelodyInModeTwo == 0){ currentMelodyInModeTwo = 1; return;}
 	if (currentMelodyInModeTwo == 1){ currentMelodyInModeTwo = 2; return;}
 	if (currentMelodyInModeTwo == 2){ currentMelodyInModeTwo = 3; return;}
@@ -191,7 +195,6 @@ void switchMelody(){
 	if (currentMelodyInModeTwo == 5){ currentMelodyInModeTwo = 6; return;}
 	if (currentMelodyInModeTwo == 6){ currentMelodyInModeTwo = 7; return;}
 	if (currentMelodyInModeTwo == 7){ currentMelodyInModeTwo = 0; return;}
-
 }
 
 void ledsOff(){
