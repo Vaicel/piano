@@ -4,6 +4,12 @@
 @    29.03.2016   @
 ******************/
 
+//Известные баги
+/*
+в режиме 2: подсвечиваются не играемые ноты, а просто кнопки по порядку
+в режиме 3: если подряд одинаковые ноты, они проигрываются сами
+*/
+
 #define FR_NOTE_C4  262 
 #define FR_NOTE_D4  294
 #define FR_NOTE_E4  330
@@ -53,7 +59,7 @@ int freqsNotes[] = {FR_NOTE_C4,FR_NOTE_D4,FR_NOTE_E4,FR_NOTE_F4,
 
 
 int melodies[][8] = {
-	{1,2,3,4,5,6,7,0},
+	{0,5,5,4,5,3,0,0},
 	{2,3,4,5,6,7,0,1},
 	{3,4,5,6,7,0,1,2},
 	{4,5,6,7,0,1,2,3},
@@ -66,6 +72,7 @@ int melodies[][8] = {
 int currentNote = 0;
 int prevNote = 18;
 int currentMelody = 0;
+volatile int currentMelodyInModeTwo = 0;
 int prevMelody = 18;
 int currentNoteToPlay = 0;
 
@@ -76,12 +83,13 @@ void setup(){
 		pinMode(ledsNotes[i],OUTPUT);
 	}
 	pinMode(BTN_MODE, INPUT_PULLUP);
+	pinMode(BTN_MELODY, INPUT_PULLUP);
 	pinMode(LED_MODE_0, OUTPUT);
 	pinMode(LED_MODE_1, OUTPUT);
 	pinMode(LED_MODE_2, OUTPUT);
 	attachInterrupt(0, switchMode, FALLING);
 	attachInterrupt(1, switchMelody, FALLING);
-//	Serial.begin(19200);
+	Serial.begin(19200);
 }
 
 void loop(){
@@ -118,16 +126,17 @@ void loop(){
 		ledsOff();
 		digitalWrite(LED_MODE_1, LOW);
 		digitalWrite(LED_MODE_2, HIGH);
-//		currentMelody = 0;
+	//	currentMelody = 0;
 		while(mode == 2){
 			for (int ntpIter = 0; ntpIter < 8; ntpIter++){
-				currentNoteToPlay = melodies[currentMelody][ntpIter];
+				currentNoteToPlay = melodies[currentMelodyInModeTwo][ntpIter];
 				digitalWrite(ledsNotes[currentNoteToPlay],HIGH);
 				while(currentNote != currentNoteToPlay){
 					prevNote = inputConverter(analogRead(BTN_NOTES)/54);
 					delay(5);
 	  				currentNote = inputConverter(analogRead(BTN_NOTES)/54);
 	  			}
+Serial.println(currentMelodyInModeTwo);
 	  			tone(BUZZER_PIN, freqsNotes[currentNote], 800);
 	  			delay(800);
 				digitalWrite(ledsNotes[currentNoteToPlay],LOW);
@@ -139,9 +148,11 @@ void loop(){
 }
 
 void playInModeZero(int currentNoteInModeZero){
+  ledsOff();
 	digitalWrite(ledsNotes[currentNoteInModeZero],HIGH);
 	tone(BUZZER_PIN, freqsNotes[currentNoteInModeZero], 100);
-	digitalWrite(ledsNotes[currentNoteInModeZero],LOW);
+//	delay(50);
+//	digitalWrite(ledsNotes[currentNoteInModeZero],LOW);
 }
 
 void playInModeOne(int currentMelodyInModeOne){
@@ -171,14 +182,15 @@ void switchMode(){
 }
 
 void switchMelody(){
-	if (currentMelody == 0){ currentMelody = 1; return;}
-	if (currentMelody == 1){ currentMelody = 2; return;}
-	if (currentMelody == 2){ currentMelody = 3; return;}
-	if (currentMelody == 3){ currentMelody = 4; return;}
-	if (currentMelody == 4){ currentMelody = 5; return;}
-	if (currentMelody == 5){ currentMelody = 6; return;}
-	if (currentMelody == 6){ currentMelody = 7; return;}
-	if (currentMelody == 7){ currentMelody = 0; return;}
+  Serial.println("p");
+	if (currentMelodyInModeTwo == 0){ currentMelodyInModeTwo = 1; return;}
+	if (currentMelodyInModeTwo == 1){ currentMelodyInModeTwo = 2; return;}
+	if (currentMelodyInModeTwo == 2){ currentMelodyInModeTwo = 3; return;}
+	if (currentMelodyInModeTwo == 3){ currentMelodyInModeTwo = 4; return;}
+	if (currentMelodyInModeTwo == 4){ currentMelodyInModeTwo = 5; return;}
+	if (currentMelodyInModeTwo == 5){ currentMelodyInModeTwo = 6; return;}
+	if (currentMelodyInModeTwo == 6){ currentMelodyInModeTwo = 7; return;}
+	if (currentMelodyInModeTwo == 7){ currentMelodyInModeTwo = 0; return;}
 
 }
 
