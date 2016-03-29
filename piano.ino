@@ -134,12 +134,9 @@ void loop(){
 				currentNoteToPlay = melodies[currentMelodyInModeTwo][ntpIter];
 				digitalWrite(ledsNotes[currentNoteToPlay],HIGH);
 				while(currentNote != currentNoteToPlay){
-					while(prevNote != currentNote){
-						prevNote = inputConverter(analogRead(BTN_NOTES)/54);
-						delay(5);
-		  				currentNote = inputConverter(analogRead(BTN_NOTES)/54);
-	  				}
-
+					prevNote = inputConverter(analogRead(BTN_NOTES)/54);
+					delay(5);
+	  				currentNote = inputConverter(analogRead(BTN_NOTES)/54);
 	  			}
 	  			tone(BUZZER_PIN, freqsNotes[currentNote], 800);
 	  			delay(800);
