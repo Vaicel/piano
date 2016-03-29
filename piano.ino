@@ -6,10 +6,9 @@
 
 //Известные баги
 /*
-[РЕШЕНО, ТЕСТИТЬ] в режиме 2: подсвечиваются не играемые ноты, а просто кнопки по порядку
 в режиме 3: если сыграна часть мелодии и затем мелодия переключилась, 
 			то текущая позиция внутри мелодии не сбрасывается
-в режиме 3: не переключается в режим 1 (возможно, переключается только после доигрывания мелодии)
+в режиме 3: режим переключается только после доигрывания мелодии
 */
 
 #define FR_NOTE_C4  262 
@@ -139,7 +138,9 @@ void loop(){
 					prevNote = inputConverter(analogRead(BTN_NOTES)/54);
 					delay(5);
 	  				currentNote = inputConverter(analogRead(BTN_NOTES)/54);
+	  				if (mode != 2) break;
 	  			}
+	  			if (mode != 2) break;
 	  			tone(BUZZER_PIN, freqsNotes[currentNote], 800);
 	  			delay(800);
 				digitalWrite(ledsNotes[currentNoteToPlay],LOW);
