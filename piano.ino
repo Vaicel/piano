@@ -7,9 +7,9 @@
 //Известные баги
 /*
 [РЕШЕНО, ТЕСТИТЬ] в режиме 2: подсвечиваются не играемые ноты, а просто кнопки по порядку
-[РЕШЕНО, ТЕСТИТЬ] в режиме 3: если подряд одинаковые ноты, они проигрываются сами
 в режиме 3: если сыграна часть мелодии и затем мелодия переключилась, 
 			то текущая позиция внутри мелодии не сбрасывается
+в режиме 3: не переключается в режим 1 (возможно, переключается только после доигрывания мелодии)
 */
 
 #define FR_NOTE_C4  262 
@@ -60,16 +60,18 @@ int freqsNotes[] = {FR_NOTE_C4,FR_NOTE_D4,FR_NOTE_E4,FR_NOTE_F4,
 					FR_NOTE_G4,FR_NOTE_A4,FR_NOTE_B4,FR_NOTE_C5};
 
 
-int melodies[][8] = {
-	{0,5,5,4,5,3,0,0},
-	{2,3,4,5,6,7,0,1},
-	{3,4,5,6,7,0,1,2},
-	{4,5,6,7,0,1,2,3},
-	{5,6,7,0,1,2,3,4},
-	{6,7,0,1,2,3,4,5},
-	{7,0,1,2,3,4,5,6},
-	{0,1,2,3,4,5,6,7}
+int melodies[][11] = {
+	{0,5,5,4,5,3,0,0,0,0,0},
+	{4,2,5,4,1,3,2,1,0,0,0},
+	{4,2,2,4,2,2,4,3,2,1,0},
+	{4,2,4,2,4,3,2,1,0,2,4},
+	{5,6,7,0,1,2,3,4,0,0,0},
+	{6,7,0,1,2,3,4,5,0,0,0},
+	{7,0,1,2,3,4,5,6,0,0,0},
+	{0,1,2,3,4,5,6,7,0,0,0}
 };
+
+int melodysLens[] = {8,9,11,11,8,8,8,8};
 
 int currentNote = 0;
 int prevNote = 18;
@@ -130,7 +132,7 @@ void loop(){
 		digitalWrite(LED_MODE_2, HIGH);
 	//	currentMelody = 0;
 		while(mode == 2){
-			for (int ntpIter = 0; ntpIter < 8; ntpIter++){
+			for (int ntpIter = 0; ntpIter < melodysLens[currentMelodyInModeTwo]; ntpIter++){
 				currentNoteToPlay = melodies[currentMelodyInModeTwo][ntpIter];
 				digitalWrite(ledsNotes[currentNoteToPlay],HIGH);
 				while(currentNote != currentNoteToPlay){
@@ -159,11 +161,11 @@ void playInModeZero(int currentNoteInModeZero){
 
 void playInModeOne(int currentMelodyInModeOne){
 	ledsOff();
-	for (int noteInModeOne = 0; noteInModeOne < 8; noteInModeOne++){
-		digitalWrite(melodies[currentMelodyInModeOne][noteInModeOne],HIGH);
+	for (int noteInModeOne = 0; noteInModeOne < melodysLens[currentMelodyInModeOne]; noteInModeOne++){
+		digitalWrite(ledsNotes[melodies[currentMelodyInModeOne][noteInModeOne]],HIGH);
 		tone(BUZZER_PIN, freqsNotes[melodies[currentMelodyInModeOne][noteInModeOne]], 800);
 		delay(800);
-		digitalWrite(melodies[currentMelodyInModeOne][noteInModeOne],LOW);
+		digitalWrite(ledsNotes[melodies[currentMelodyInModeOne][noteInModeOne]],LOW);
 	}
 }
 
