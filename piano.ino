@@ -142,7 +142,7 @@ void loop(){
                                         if (mode != 2) break;
 	  			}
 	  			if (mode != 2) break;
-	  			tone(BUZZER_PIN, freqsNotes[currentNote], 800);
+	  			tone(BUZZER_PIN, freqsNotes[currentNoteInModeTwo], 800);
 	  			delay(800);
 				digitalWrite(ledsNotes[currentNoteToPlay],LOW);
 				
