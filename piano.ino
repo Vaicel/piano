@@ -1,4 +1,4 @@
-//v19
+//v20
 
 #define DOUBLE_TAP_DELAY 6 //меняй это
 
@@ -138,12 +138,15 @@ Serial.println("XUY");
 				currentNoteInModeTwo = 18;				
 				currentNoteToPlay = melodies[currentMelodyInModeTwo][ntpIter];
   				digitalWrite(ledsNotes[currentNoteToPlay],HIGH);
-				while(currentNoteInModeTwo != currentNoteToPlay){
+				//while(currentNoteInModeTwo != currentNoteToPlay){
 					//prevNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
 					//delay(DOUBLE_TAP_DELAY);
-	  				currentNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
+for(;;){	  			
+	currentNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
+if (currentNoteInModeTwo == currentNoteToPlay) break;
                                         if (mode != 2) break;
-	  			}
+}
+	  			//}
 	  			if (mode != 2) break;
 	  			tone(BUZZER_PIN, freqsNotes[currentNoteInModeTwo], 800);
 	  			delay(800);
