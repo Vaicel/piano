@@ -132,6 +132,7 @@ void loop(){
 		digitalWrite(LED_MODE_2, HIGH);
 		while(mode == 2){
 			for (int ntpIter = 0; ntpIter < melodysLens[currentMelodyInModeTwo]; ntpIter++){                                
+				currentNoteInModeTwo = 18;				
 				currentNoteToPlay = melodies[currentMelodyInModeTwo][ntpIter];
 				digitalWrite(ledsNotes[currentNoteToPlay],HIGH);
 				while(currentNoteInModeTwo != currentNoteToPlay){
@@ -144,7 +145,7 @@ void loop(){
 	  			tone(BUZZER_PIN, freqsNotes[currentNote], 800);
 	  			delay(800);
 				digitalWrite(ledsNotes[currentNoteToPlay],LOW);
-				currentNoteInModeTwo = 18;
+				
 			}	
 		}		
 	}
