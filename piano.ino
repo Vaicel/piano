@@ -1,3 +1,5 @@
+#define DOUBLE_TAP_DELAY 6
+
 /******************
 @ KIDS FOOT PIANO @
 @    By dubkov    @
@@ -91,7 +93,7 @@ void loop(){
 		digitalWrite(LED_MODE_0, HIGH);
 		while(mode == 0){
 			prevNote = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
-			delay(5);
+			delay(DOUBLE_TAP_DELAY);
   			currentNote = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
   			if(prevNote == currentNote && currentNote < 15){
 				ledsOff();
@@ -107,7 +109,7 @@ void loop(){
 		while(mode == 1){
  			ledsOn(); 
  			prevMelody = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
-			delay(5);
+			delay(DOUBLE_TAP_DELAY);
 			currentMelody = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
   			if(prevMelody == currentMelody && currentMelody < 15){
 				ledsOff();
@@ -131,7 +133,7 @@ void loop(){
 				digitalWrite(ledsNotes[currentNoteToPlay],HIGH);
 				while(currentNote != currentNoteToPlay){
 					prevNote = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
-					delay(5);
+					delay(DOUBLE_TAP_DELAY);
 	  				currentNote = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
 	  				if (mode != 2) break;
 	  			}
