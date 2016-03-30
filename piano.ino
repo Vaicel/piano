@@ -88,9 +88,9 @@ void loop(){
 		digitalWrite(LED_MODE_2, LOW);
 		digitalWrite(LED_MODE_0, HIGH);
 		while(mode == 0){
-			prevNote = inputConverter(analogRead(BTN_NOTES)/54);
+			prevNote = inputConverter(analogRead(BTN_NOTES)/50);
 			delay(5);
-  			currentNote = inputConverter(analogRead(BTN_NOTES)/54);
+  			currentNote = inputConverter(analogRead(BTN_NOTES)/50);
   			if(prevNote == currentNote && currentNote < 15)
 				playInModeZero(currentNote);
 		}		
@@ -101,9 +101,9 @@ void loop(){
 		digitalWrite(LED_MODE_1, HIGH);
 		while(mode == 1){
  			ledsOn(); 
- 			prevMelody = inputConverter(analogRead(BTN_NOTES)/54);
+ 			prevMelody = inputConverter(analogRead(BTN_NOTES)/50);
 			delay(5);
-			currentMelody = inputConverter(analogRead(BTN_NOTES)/54);
+			currentMelody = inputConverter(analogRead(BTN_NOTES)/50);
   			if(prevMelody == currentMelody && currentMelody < 15)
 				playInModeOne(currentMelody);
 		}
@@ -118,9 +118,9 @@ void loop(){
 				currentNoteToPlay = melodies[currentMelodyInModeTwo][ntpIter];
 				digitalWrite(ledsNotes[currentNoteToPlay],HIGH);
 				while(currentNote != currentNoteToPlay){
-					prevNote = inputConverter(analogRead(BTN_NOTES)/54);
+					prevNote = inputConverter(analogRead(BTN_NOTES)/50);
 					delay(5);
-	  				currentNote = inputConverter(analogRead(BTN_NOTES)/54);
+	  				currentNote = inputConverter(analogRead(BTN_NOTES)/50);
 	  				if (mode != 2) break;
 	  			}
 	  			if (mode != 2) break;
@@ -154,8 +154,7 @@ void playInModeOne(int currentMelodyInModeOne){
 //void playInModeTwo(int currentNoteInModeTwo, int currentNoteToPlayInModeTwo){
 //}
 
-int inputConverterArray[] = {0,1,2,3,4,4,5,5,6,6,7,7,
-						18,18,18,18,18,18,18};
+int inputConverterArray[] = {0,0,0,0,0,1,2,3,4,4,4,5,6,7}; // TUNE THIS for yur keyboard
 
 int inputConverter(int ainput){
 	return inputConverterArray[ainput];
