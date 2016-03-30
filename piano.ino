@@ -1,4 +1,4 @@
-#define DOUBLE_TAP_DELAY 6
+#define DOUBLE_TAP_DELAY 6 //меняй это
 
 /******************
 @ KIDS FOOT PIANO @
@@ -124,25 +124,39 @@ void loop(){
 	}
 
 	else if (mode == 2){
+                Serial.println("MODE 2");
 		ledsOff();
 		digitalWrite(LED_MODE_1, LOW);
 		digitalWrite(LED_MODE_2, HIGH);
 		while(mode == 2){
 			for (int ntpIter = 0; ntpIter < melodysLens[currentMelodyInModeTwo]; ntpIter++){
+  Serial.print("Melodia ");
+  Serial.println(currentMelodyInModeTwo);                              
+  Serial.print("nota iz melodii ");
+  Serial.println(ntpIter);
+                                
 				currentNoteToPlay = melodies[currentMelodyInModeTwo][ntpIter];
+  Serial.print("nado sigrat' notu  ");
+  Serial.println(currentNoteToPlay);
 				digitalWrite(ledsNotes[currentNoteToPlay],HIGH);
 				while(currentNote != currentNoteToPlay){
 					prevNote = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
 					delay(DOUBLE_TAP_DELAY);
 	  				currentNote = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
-	  				if (mode != 2) break;
+Serial.print("sigrana nota ");
+  Serial.println(currentNote);
+                                        if (mode != 2) break;
 	  			}
+  Serial.println("Vihod iz while");
 	  			if (mode != 2) break;
 	  			tone(BUZZER_PIN, freqsNotes[currentNote], 800);
 	  			delay(800);
 				digitalWrite(ledsNotes[currentNoteToPlay],LOW);
+ 
+  Serial.println("sigral notu");
 				currentNote = 18;
 			}	
+  Serial.println("Vihod iz for");
 		}		
 	}
 
