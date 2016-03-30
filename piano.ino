@@ -39,6 +39,8 @@
 #define LED_MODE_1	15
 #define LED_MODE_2	16
 
+#define ANALOG_READ_DIVIDER	50
+
 int ledsNotes[] = {LED_NOTE_C4,LED_NOTE_D4,LED_NOTE_E4,LED_NOTE_F4,
 					LED_NOTE_G4,LED_NOTE_A4,LED_NOTE_B4,LED_NOTE_C5};
 
@@ -88,11 +90,14 @@ void loop(){
 		digitalWrite(LED_MODE_2, LOW);
 		digitalWrite(LED_MODE_0, HIGH);
 		while(mode == 0){
-			prevNote = inputConverter(analogRead(BTN_NOTES)/50);
+			prevNote = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
 			delay(5);
-  			currentNote = inputConverter(analogRead(BTN_NOTES)/50);
-  			if(prevNote == currentNote && currentNote < 15)
-				playInModeZero(currentNote);
+  			currentNote = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
+  			if(prevNote == currentNote && currentNote < 15){
+				ledsOff();
+				digitalWrite(ledsNotes[currentNote],HIGH);
+				tone(BUZZER_PIN, freqsNotes[currentNote], 100);
+			}
 		}		
 	}
 
@@ -101,11 +106,18 @@ void loop(){
 		digitalWrite(LED_MODE_1, HIGH);
 		while(mode == 1){
  			ledsOn(); 
- 			prevMelody = inputConverter(analogRead(BTN_NOTES)/50);
+ 			prevMelody = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
 			delay(5);
-			currentMelody = inputConverter(analogRead(BTN_NOTES)/50);
-  			if(prevMelody == currentMelody && currentMelody < 15)
-				playInModeOne(currentMelody);
+			currentMelody = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
+  			if(prevMelody == currentMelody && currentMelody < 15){
+				ledsOff();
+				for (int noteInModeOne = 0; noteInModeOne < melodysLens[currentMelody]; noteInModeOne++){
+					digitalWrite(ledsNotes[melodies[currentMelody][noteInModeOne]],HIGH);
+					tone(BUZZER_PIN, freqsNotes[melodies[currentMelody][noteInModeOne]], 800);
+					delay(800);
+					digitalWrite(ledsNotes[melodies[currentMelody][noteInModeOne]],LOW);
+				}
+			}
 		}
 	}
 
@@ -118,9 +130,9 @@ void loop(){
 				currentNoteToPlay = melodies[currentMelodyInModeTwo][ntpIter];
 				digitalWrite(ledsNotes[currentNoteToPlay],HIGH);
 				while(currentNote != currentNoteToPlay){
-					prevNote = inputConverter(analogRead(BTN_NOTES)/50);
+					prevNote = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
 					delay(5);
-	  				currentNote = inputConverter(analogRead(BTN_NOTES)/50);
+	  				currentNote = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
 	  				if (mode != 2) break;
 	  			}
 	  			if (mode != 2) break;
@@ -128,31 +140,11 @@ void loop(){
 	  			delay(800);
 				digitalWrite(ledsNotes[currentNoteToPlay],LOW);
 				currentNote = 18;
-  				//playInModeTwo(currentNote, currentNoteToPlay);	
 			}	
 		}		
 	}
 
 }
-
-void playInModeZero(int currentNoteInModeZero){
-  ledsOff();
-	digitalWrite(ledsNotes[currentNoteInModeZero],HIGH);
-	tone(BUZZER_PIN, freqsNotes[currentNoteInModeZero], 100);
-}
-
-void playInModeOne(int currentMelodyInModeOne){
-	ledsOff();
-	for (int noteInModeOne = 0; noteInModeOne < melodysLens[currentMelodyInModeOne]; noteInModeOne++){
-		digitalWrite(ledsNotes[melodies[currentMelodyInModeOne][noteInModeOne]],HIGH);
-		tone(BUZZER_PIN, freqsNotes[melodies[currentMelodyInModeOne][noteInModeOne]], 800);
-		delay(800);
-		digitalWrite(ledsNotes[melodies[currentMelodyInModeOne][noteInModeOne]],LOW);
-	}
-}
-
-//void playInModeTwo(int currentNoteInModeTwo, int currentNoteToPlayInModeTwo){
-//}
 
 int inputConverterArray[] = {0,0,0,0,0,1,2,3,4,4,4,5,6,7}; // TUNE THIS for yur keyboard
 
@@ -167,14 +159,10 @@ void switchMode(){
 }
 
 void switchMelody(){
-	if (currentMelodyInModeTwo == 0){ currentMelodyInModeTwo = 1; return;}
-	if (currentMelodyInModeTwo == 1){ currentMelodyInModeTwo = 2; return;}
-	if (currentMelodyInModeTwo == 2){ currentMelodyInModeTwo = 3; return;}
-	if (currentMelodyInModeTwo == 3){ currentMelodyInModeTwo = 4; return;}
-	if (currentMelodyInModeTwo == 4){ currentMelodyInModeTwo = 5; return;}
-	if (currentMelodyInModeTwo == 5){ currentMelodyInModeTwo = 6; return;}
-	if (currentMelodyInModeTwo == 6){ currentMelodyInModeTwo = 7; return;}
-	if (currentMelodyInModeTwo == 7){ currentMelodyInModeTwo = 0; return;}
+	currentMelodyInModeTwo += 1;
+	if (currentMelodyInModeTwo == 8)
+		currentMelodyInModeTwo = 0;
+	return;
 }
 
 void ledsOff(){
