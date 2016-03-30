@@ -71,6 +71,8 @@ volatile int currentMelodyInModeTwo = 0;
 int prevMelody = 18;
 int currentNoteToPlay = 0;
 volatile int mode = 0;
+int currentNoteInModeTwo = 18;
+int prevNoteInModeTwo = 18;
 
 void setup(){
 	for (int i=0; i<9; i++){
@@ -129,34 +131,21 @@ void loop(){
 		digitalWrite(LED_MODE_1, LOW);
 		digitalWrite(LED_MODE_2, HIGH);
 		while(mode == 2){
-			for (int ntpIter = 0; ntpIter < melodysLens[currentMelodyInModeTwo]; ntpIter++){
-  Serial.print("Melodia ");
-  Serial.println(currentMelodyInModeTwo);                              
-  Serial.print("nota iz melodii ");
-  Serial.println(ntpIter);
-                                
+			for (int ntpIter = 0; ntpIter < melodysLens[currentMelodyInModeTwo]; ntpIter++){                                
 				currentNoteToPlay = melodies[currentMelodyInModeTwo][ntpIter];
-  Serial.print("nado sigrat' notu  ");
-  Serial.println(currentNoteToPlay);
 				digitalWrite(ledsNotes[currentNoteToPlay],HIGH);
-				while(currentNote != currentNoteToPlay){
-					prevNote = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
+				while(currentNoteInModeTwo != currentNoteToPlay){
+					prevNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
 					delay(DOUBLE_TAP_DELAY);
-	  				currentNote = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
-Serial.print("sigrana nota ");
-  Serial.println(currentNote);
+	  				currentNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
                                         if (mode != 2) break;
 	  			}
-  Serial.println("Vihod iz while");
 	  			if (mode != 2) break;
 	  			tone(BUZZER_PIN, freqsNotes[currentNote], 800);
 	  			delay(800);
 				digitalWrite(ledsNotes[currentNoteToPlay],LOW);
- 
-  Serial.println("sigral notu");
-				currentNote = 18;
+				currentNoteInModeTwo = 18;
 			}	
-  Serial.println("Vihod iz for");
 		}		
 	}
 
