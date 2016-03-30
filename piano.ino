@@ -1,4 +1,4 @@
-//v22
+//v23
 
 #define DOUBLE_TAP_DELAY 6 //меняй это
 
@@ -141,9 +141,11 @@ Serial.println("XUY");
 				//while(currentNoteInModeTwo != currentNoteToPlay){
 					//prevNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
 					//delay(DOUBLE_TAP_DELAY);
-                                for(;;){	  			
-	                                currentNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
-                                        if (currentNoteInModeTwo == currentNoteToPlay) break;
+                                for(;;){
+                                        prevNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);	  			
+	                                delay(DOUBLE_TAP_DELAY);
+                                        currentNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
+                                        if (prevNoteInModeTwo == currentNoteInModeTwo && currentNoteInModeTwo == currentNoteToPlay) break;
                                         if (mode != 2) break;
                                 }
 	  			//}
