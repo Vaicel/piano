@@ -1,4 +1,4 @@
-//v21
+//v22
 
 #define DOUBLE_TAP_DELAY 6 //меняй это
 
@@ -107,7 +107,7 @@ Serial.println("XUY");
 		}		
 	}
 
-	else if (mode == 1){
+	if (mode == 1){
 		digitalWrite(LED_MODE_0, LOW);
 		digitalWrite(LED_MODE_1, HIGH);
 		while(mode == 1){
@@ -141,19 +141,23 @@ Serial.println("XUY");
 				//while(currentNoteInModeTwo != currentNoteToPlay){
 					//prevNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
 					//delay(DOUBLE_TAP_DELAY);
-currentNoteToPlay=0;
-for(;;){	  			
-	currentNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
-if (currentNoteInModeTwo == currentNoteToPlay) break;
+                                for(;;){	  			
+	                                currentNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
+                                        if (currentNoteInModeTwo == currentNoteToPlay) break;
                                         if (mode != 2) break;
-}
+                                }
 	  			//}
 	  			if (mode != 2) break;
 	  			tone(BUZZER_PIN, freqsNotes[currentNoteInModeTwo], 800);
 	  			delay(800);
 				digitalWrite(ledsNotes[currentNoteToPlay],LOW);
 				
-			}	
+			}
+                        if (mode == 2){
+                          ledsOn();
+                          delay(1000);
+                          ledsOff();	
+                        }
 		}		
 	}
 
