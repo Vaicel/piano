@@ -1,4 +1,4 @@
-//v23
+//v24
 
 #define DOUBLE_TAP_DELAY 6 //меняй это
 
@@ -77,9 +77,8 @@ int currentNoteInModeTwo = 18;
 int prevNoteInModeTwo = 18;
 
 void setup(){
-	for (int i=0; i<9; i++){
+	for (int i=0; i<9; i++)
 		pinMode(ledsNotes[i],OUTPUT);
-	}
 	pinMode(BTN_MODE, INPUT_PULLUP);
 	pinMode(BTN_MELODY, INPUT_PULLUP);
 	pinMode(LED_MODE_0, OUTPUT);
@@ -98,8 +97,8 @@ Serial.println("XUY");
 		while(mode == 0){
 			prevNote = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
 			delay(DOUBLE_TAP_DELAY);
-  			currentNote = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
-  			if(prevNote == currentNote && currentNote < 15){
+			currentNote = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
+			if(prevNote == currentNote && currentNote < 15){
 				ledsOff();
 				digitalWrite(ledsNotes[currentNote],HIGH);
 				tone(BUZZER_PIN, freqsNotes[currentNote], 100);
@@ -111,11 +110,11 @@ Serial.println("XUY");
 		digitalWrite(LED_MODE_0, LOW);
 		digitalWrite(LED_MODE_1, HIGH);
 		while(mode == 1){
- 			ledsOn(); 
- 			prevMelody = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
+			ledsOn(); 
+			prevMelody = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
 			delay(DOUBLE_TAP_DELAY);
 			currentMelody = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
-  			if(prevMelody == currentMelody && currentMelody < 15){
+			if(prevMelody == currentMelody && currentMelody < 15){
 				ledsOff();
 				for (int noteInModeOne = 0; noteInModeOne < melodysLens[currentMelody]; noteInModeOne++){
 					digitalWrite(ledsNotes[melodies[currentMelody][noteInModeOne]],HIGH);
@@ -128,38 +127,33 @@ Serial.println("XUY");
 	}
 
 	else if (mode == 2){
-                Serial.println("MODE 2");
+		Serial.println("MODE 2");
 		ledsOff();
 		digitalWrite(LED_MODE_1, LOW);
 		digitalWrite(LED_MODE_2, HIGH);
-                currentNoteToPlay = 0;
+		currentNoteToPlay = 0;
 		while(mode == 2){
 			for (int ntpIter = 0; ntpIter < melodysLens[currentMelodyInModeTwo]; ntpIter++){                                
 				currentNoteInModeTwo = 18;				
 				currentNoteToPlay = melodies[currentMelodyInModeTwo][ntpIter];
-  				digitalWrite(ledsNotes[currentNoteToPlay],HIGH);
-				//while(currentNoteInModeTwo != currentNoteToPlay){
-					//prevNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
-					//delay(DOUBLE_TAP_DELAY);
-                                for(;;){
-                                        prevNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);	  			
-	                                delay(DOUBLE_TAP_DELAY);
-                                        currentNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
-                                        if (prevNoteInModeTwo == currentNoteInModeTwo && currentNoteInModeTwo == currentNoteToPlay) break;
-                                        if (mode != 2) break;
-                                }
-	  			//}
-	  			if (mode != 2) break;
-	  			tone(BUZZER_PIN, freqsNotes[currentNoteInModeTwo], 800);
-	  			delay(800);
+				digitalWrite(ledsNotes[currentNoteToPlay],HIGH);
+				for(;;){
+					prevNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);	  			
+					delay(DOUBLE_TAP_DELAY);
+					currentNoteInModeTwo = inputConverter(analogRead(BTN_NOTES)/ANALOG_READ_DIVIDER);
+					if (prevNoteInModeTwo == currentNoteInModeTwo && currentNoteInModeTwo == currentNoteToPlay) break;
+					if (mode != 2) break;
+				}
+				if (mode != 2) break;
+				tone(BUZZER_PIN, freqsNotes[currentNoteInModeTwo], 800);
+				delay(800);
 				digitalWrite(ledsNotes[currentNoteToPlay],LOW);
-				
 			}
-                        if (mode == 2){
-                          ledsOn();
-                          delay(1000);
-                          ledsOff();	
-                        }
+			if (mode == 2){
+				ledsOn();
+				delay(1000);
+				ledsOff();	
+			}
 		}		
 	}
 
